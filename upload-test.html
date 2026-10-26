@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carga de Documentos - Página de prueba</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f3f4f6; color: #1f2937; line-height: 1.6; padding: 2rem;
+        }
+        .container {
+            max-width: 640px; margin: 0 auto; background: #fff;
+            border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 2rem;
+        }
+        h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+        .field { margin-bottom: 1.5rem; }
+        label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+        input[type="file"] {
+            display: block; width: 100%; padding: 0.6rem;
+            border: 2px dashed #cbd5e1; border-radius: 8px; background: #f8fafc;
+        }
+        button {
+            padding: 0.7rem 1.5rem; background: #2563eb; color: #fff; border: none;
+            border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+        }
+        button:hover { background: #1d4ed8; }
+        .result {
+            margin-top: 1.5rem; padding: 1rem; border-radius: 8px;
+            background: #ecfdf5; border: 1px solid #10b981; display: none;
+        }
+        .result.show { display: block; }
+        .result h2 { font-size: 1rem; color: #065f46; margin-bottom: 0.5rem; }
+        .file-item {
+            font-size: 0.9rem; color: #065f46; padding: 0.2rem 0;
+            font-family: monospace;
+        }
+        .count-badge {
+            display: inline-block; background: #10b981; color: #fff;
+            border-radius: 999px; padding: 0.1rem 0.6rem; font-size: 0.8rem; font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📄 Formulario de Carga de Documentos</h1>
+
+        <form id="upload-form" onsubmit="handleSubmit(event)">
+            <div class="field">
+                <label for="single-file">Documento único</label>
+                <input type="file" id="single-file" data-testid="single-file" name="single-file">
+            </div>
+
+            <div class="field">
+                <label for="multi-file">Múltiples documentos</label>
+                <input type="file" id="multi-file" data-testid="multi-file" name="multi-file" multiple>
+            </div>
+
+            <button type="submit" id="submit-btn" data-testid="submit-btn">Enviar documentos</button>
+        </form>
+
+        <div class="result" id="upload-result" data-testid="upload-result">
+            <h2>✅ Documentos cargados correctamente</h2>
+            <div>Único: <span id="single-result" data-testid="single-result"></span></div>
+            <div style="margin-top:0.5rem">
+                Múltiples <span class="count-badge" id="multi-count" data-testid="multi-count">0</span>:
+                <div id="multi-list" data-testid="multi-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(e) {
+            e.preventDefault();
+            const single = document.getElementById('single-file').files;
+            const multi = document.getElementById('multi-file').files;
+
+            document.getElementById('single-result').textContent =
+                single.length > 0 ? single[0].name : '(ninguno)';
+
+            document.getElementById('multi-count').textContent = multi.length;
+            const list = document.getElementById('multi-list');
+            list.innerHTML = '';
+            for (const f of multi) {
+                const div = document.createElement('div');
+                div.className = 'file-item';
+                div.setAttribute('data-testid', 'multi-file-name');
+                div.textContent = '• ' + f.name;
+                list.appendChild(div);
+            }
+
+            document.getElementById('upload-result').classList.add('show');
+        }
+    </script>
+</body>
+</html>
